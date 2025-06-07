@@ -22,8 +22,7 @@ class TestLocators:
 # Локаторы - "Войти в аккаунт"
     # кнопка "Войти в аккаунт" на главной страницу
     BUTTON_LOGIN_ACCOUNT_MAIN_PAGE_LOCATOR = By.XPATH, "//button[text()='Войти в аккаунт']"
-    # ссылка "Личный кабинет" в хедере
-    PARAGRAPH_PERSONAL_ACCOUNT_HEADER_LOCATOR = By.XPATH, "//p[text()='Личный Кабинет']"
+
     # ссылка "Войти" на странице регистрации
     LINK_LOGIN_ACCOUNT_REGISTRATION_PAGE_LOCATOR = By.XPATH, "//a[text()='Войти']"
     # ссылка "Войти" на странице восстановления пароля

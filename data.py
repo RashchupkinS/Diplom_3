@@ -3,6 +3,10 @@ import os
 
 
 
+email_for_test = "rsv19000@gmail.com"
+password_for_test = "qwerty123"
+name_fot_test = "rsv"
+
 # класс содержит корректные данные зарегистрированного пользователя
 class CorrectAuthorizationData:
     CORRECT_NAME = "rsv"
