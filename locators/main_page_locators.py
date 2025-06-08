@@ -11,3 +11,8 @@ PARAGRAPH_FEED_OF_ORDERS_HEADER_LOCATOR = By.XPATH, "//p[text()='Лента За
 PARAGRAPH_CONSTRUCTOR_HEADER_LOCATOR = By.XPATH, "//p[text()='Конструктор']"
 
 
+MODAL_WINDOW_OPENED_NUMBER_OF_ORDER = By.XPATH, "//h2[contains(@class, 'Modal_modal__title__2L34m')]"
+
+
+
+

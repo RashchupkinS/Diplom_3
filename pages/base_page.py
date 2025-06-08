@@ -1,8 +1,11 @@
 import allure
 from selenium.webdriver.support.wait import WebDriverWait as WDW
 from selenium.webdriver.support import expected_conditions as EC
+from seletools.actions import drag_and_drop
 
+from selenium.webdriver import ActionChains
 
+from locators.personal_account_page_locators import ORDER_ITEMS_IN_FEED_HISTORY_IN_PERSONAL_ACCOUNT_PAGE_LOCATOR
 
 
 # класс содержит базовые методы
@@ -11,6 +14,7 @@ class BasePage:
     def __init__(self, driver):
         self.driver = driver
         self.wait = WDW(driver, 10)
+        self.actions = ActionChains(driver)
 
 
     # метод открывает переданную страницу
@@ -32,7 +36,7 @@ class BasePage:
         return self.wait.until(EC.element_to_be_clickable(locator))
 
 
-    # метод выполняет клик по элементу
+    # метод
     @allure.step('Ожидание видимости элемента')
     def wait_for_visible_element(self, locator):
         return self.wait.until(EC.visibility_of_element_located(locator))
@@ -58,14 +62,66 @@ class BasePage:
         return self.driver.current_url
 
 
-    # # скроллинг до элемента и ожидание его кликабельности
-    # @allure.step('Прокрутить до элемента')
-    # def scroll_to_element(self, locator):
-    #     element = self.driver.find_element(*locator)
-    #     self.driver.execute_script("arguments[0].scrollIntoView();", element)
-    #     self.wait.until(EC.element_to_be_clickable(element))
-    #     return element
-    #
+
+    # # метод передаёт тест элементу
+    # @allure.step('Перетащить элемент')
+    # def drag_and_drop_element(self, locator_from, locator_to):
+    #     drag_and_drop(self.driver, locator_from, locator_to)
+
+
+    @allure.step('Перетащить элемент с помощью ActionChains')
+    def drag_and_drop_element(self, locator_from, locator_to):
+        source = self.wait_for_visible_element(locator_from)
+        target = self.wait_for_visible_element(locator_to)
+        self.actions.drag_and_drop(source, target).perform()
+
+
+
+
+    # скроллинг до элемента и ожидание его кликабельности
+    @allure.step('Прокрутить до элемента')
+    def scroll_to_element(self, locator):
+        element = self.driver.find_element(*locator)
+        self.driver.execute_script("arguments[0].scrollIntoView();", element)
+        self.wait.until(EC.element_to_be_clickable(element))
+        return element
+
+    @allure.step("Получить список заказов")
+    def get_order_list(self):
+        return self.driver.find_elements(*ORDER_ITEMS_IN_FEED_HISTORY_IN_PERSONAL_ACCOUNT_PAGE_LOCATOR)
+
+    @allure.step("Прокрутить контейнер до элемента")
+    def scroll_inside_container_to_element(self, container_locator, item_locator):
+        container = self.driver.find_element(*container_locator)
+        items = container.find_elements(*item_locator)
+        if not items:
+            raise Exception("Элементы внутри контейнера не найдены")
+        last_item = items[-1]
+        self.driver.execute_script("arguments[0].scrollIntoView({block: 'end'});", last_item)
+        self.wait.until(EC.element_to_be_clickable(last_item))
+        return last_item
+
+    def get_elements(self, locator):
+        return self.driver.find_elements(*locator)
+
+
+
+
+    @allure.step("Получение списка номеров заказов в работе")
+    def get_all_orders_number_in_progress_list(self, locator):
+        self.wait_for_visible_element(locator)  # дождаться видимости хотя бы одного элемента
+        orders_elements = self.driver.find_elements(*locator)
+        list_of_orders = []
+        for item in orders_elements:
+            order_text = item.text.strip()
+            order_number = order_text.lstrip('0')
+            list_of_orders.append(order_number)
+        return list_of_orders
+
+
+
+
+
 
     # # метод выполняет клик по элементу
     # @allure.step('Ожидание видимости элемента')

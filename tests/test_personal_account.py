@@ -29,8 +29,7 @@ class TestPersonalAccount:
     allure.title("Переход в раздел «История заказов» по клику кнопки 'История заказов' в личном кабинете")
     def test_transition_from_personal_account_to_orders_history(self, driver):
         page = BasePage(driver)
-        page.open_page(Urls.URL_MAIN_PAGE)
-        page.click_to_element(PARAGRAPH_PERSONAL_ACCOUNT_HEADER_LOCATOR)
+        page.open_page(Urls.URL_LOGIN_PAGE)
         page.wait_for_clickable_element(BUTTON_LOGIN_LOGIN_PAGE_LOCATOR)
         page.click_to_element(INPUT_EMAIL_LOGIN_PAGE_LOCATOR)
         page.set_text(locator=INPUT_EMAIL_LOGIN_PAGE_LOCATOR, text=email_for_test)
