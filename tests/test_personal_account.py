@@ -9,7 +9,7 @@ from locators.personal_account_page_locators import (BUTTON_EXIT_PERSONAL_ACCOUN
                                                      BUTTON_ORDERS_HISTORY_ACCOUNT_PAGE_LOCATOR)
 from data import email_for_test, password_for_test
 
-
+import time
 
 
 class TestPersonalAccount:
@@ -36,9 +36,13 @@ class TestPersonalAccount:
         page.click_to_element(INPUT_PASSWORD_LOGIN_PAGE_LOCATOR)
         page.set_text(locator=INPUT_PASSWORD_LOGIN_PAGE_LOCATOR, text=password_for_test)
         page.click_to_element(BUTTON_LOGIN_LOGIN_PAGE_LOCATOR)
+        time.sleep(3)
         page.click_to_element(PARAGRAPH_PERSONAL_ACCOUNT_HEADER_LOCATOR)
-        page.wait_for_clickable_element(BUTTON_EXIT_PERSONAL_ACCOUNT_PAGE_LOCATOR)
+        time.sleep(3)
+        page.wait_for_visible_element(BUTTON_ORDERS_HISTORY_ACCOUNT_PAGE_LOCATOR)
+        page.wait_for_clickable_element(BUTTON_ORDERS_HISTORY_ACCOUNT_PAGE_LOCATOR)
         page.click_to_element(BUTTON_ORDERS_HISTORY_ACCOUNT_PAGE_LOCATOR)
+        time.sleep(3)
         actual_url = page.get_current_url()
         assert actual_url == Urls.URL_ORDERS_HISTORY_PAGE, ("Не произведён выход со страницы "
                                                             "'Личный кабинет' на страницу 'История заказов'")
