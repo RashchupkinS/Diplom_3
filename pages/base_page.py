@@ -1,14 +1,11 @@
 import allure
 from selenium.webdriver.support.wait import WebDriverWait as WDW
 from selenium.webdriver.support import expected_conditions as EC
-from selenium.webdriver import ActionChains
-
 from locators.constructor_page_locators import ConstructorPageLocators as CPL
-from locators.personal_account_page_locators import ORDER_ITEMS_IN_FEED_HISTORY_IN_PERSONAL_ACCOUNT_PAGE_LOCATOR
-from selenium.webdriver.common.by import By
+from locators.login_page_locators import LoginPageLocators as LPL
+from locators.feed_of_orders_page_locators import FeedOfOrdersPageLocators as FOOL
+from seletools.actions import drag_and_drop
 
-import os
-import inspect
 
 
 
@@ -18,209 +15,137 @@ class BasePage:
     def __init__(self, driver):
         self.driver = driver
         self.wait = WDW(driver, 20)
-        self.actions = ActionChains(driver)
 
 
-    # метод открывает переданную страницу
     @allure.step('Открыть страницу')
     def open_page(self, url):
         self.driver.get(url)
-        self.waiting_for_overlay_to_disappear()
+        self.wait.until(EC.url_contains(url))
+        self.wait.until(
+            lambda d: d.execute_script("return document.readyState") == "complete"
+        )
 
 
-    @allure.step('Ожидание исчезновения overlay')
-    def waiting_for_overlay_to_disappear(self):
-        self.wait.until(EC.invisibility_of_element_located(CPL.OVERLAY_LOCATOR))
+    @allure.step('Кликнуть элемент')
+    def click_to_element_by_script(self, locator):
+        element = self.wait_for_visible_element(locator)
+        self.driver.execute_script("arguments[0].click();", element)
 
 
-        # клик по элементу
-
-    @allure.step('Кликнуть элемент с прокруткой в зону видимости')
-    def click_to_element_by_js(self, locator):
-        self.wait.until(EC.element_to_be_clickable(locator))
-        element = self.driver.find_element(*locator)
-        self.driver.execute_script("arguments[0].scrollIntoView(true);", element)
-        element.click()
-
-    @allure.step('Кликнуть элемент с прокруткой в зону видимости')
-    def click_to_element(self, locator):
-        self.wait.until(EC.element_to_be_clickable(locator))
-        element = self.driver.find_element(*locator)
-        element.click()
-
-
-
-    # метод выполняет клик по элементу
     @allure.step('Ожидание кликабельности элемента')
     def wait_for_clickable_element(self, locator):
         return self.wait.until(EC.element_to_be_clickable(locator))
 
 
-    # метод
+    @allure.step('Ожидание наличия элемента в DOM')
+    def wait_for_presence_element(self, locator):
+        return self.wait.until(EC.presence_of_element_located(locator))
+
+
     @allure.step('Ожидание видимости элемента')
     def wait_for_visible_element(self, locator):
         return self.wait.until(EC.visibility_of_element_located(locator))
 
 
-    # метод выполняет клик по элементу
-    @allure.step('Поиск элемента')
+    @allure.step('Ожидание невидимости элемента либо отсутствие в DOM')
+    def wait_for_invisibility_element(self, locator):
+        return self.wait.until(EC.invisibility_of_element_located(locator))
+
+
+    @allure.step('Найти элемент')
     def find_element(self, locator):
         return self.driver.find_element(*locator)
 
 
-    # метод передаёт тест элементу
-    @allure.step('Изменить текст')
-    def set_text(self, locator, text):
+    @allure.step('Найти элементы')
+    def find_elements(self, locator):
+        return self.driver.find_elements(*locator)
+
+
+    @allure.step('Очистить поле и вставить текст')
+    def set_text_in_element(self, locator, text):
         element = self.wait_for_clickable_element(locator)
         element.clear()
         element.send_keys(text)
 
 
-    # метод получает текущий url
     @allure.step('Получить текущий url')
     def get_current_url(self):
         return self.driver.current_url
 
 
-
-    # # метод передаёт тест элементу
-    # @allure.step('Перетащить элемент')
-    # def drag_and_drop_element(self, locator_from, locator_to):
-    #     drag_and_drop(self.driver, locator_from, locator_to)
+    @allure.step('Получить элемент')
+    def get_element(self, locator):
+        return self.driver.find_element(*locator)
 
 
-    @allure.step('Перетащить элемент с помощью ActionChains')
+    @allure.step('Получить текст элемента')
+    def get_element_title(self, locator):
+        element = self.driver.find_element(*locator)
+        return element.text
+
+
+    @allure.step('Нажать кнопку "Конструктор" в хедере')
+    def click_button_constructor_in_header(self):
+        self.scroll_and_click(CPL.BUTTON_CONSTRUCTOR_IN_HEADER_LOCATOR)
+
+
+    @allure.step('Нажать кнопку "Лента Заказов" в хедере')
+    def click_button_feed_of_orders_in_header(self):
+        self.scroll_and_click(CPL.BUTTON_FEED_OF_ORDERS_IN_HEADER_LOCATOR)
+
+
+    @allure.step('Нажать на кнопку "Личный кабинет" в хедере')
+    def click_button_personal_account_in_header(self):
+        self.scroll_and_click(CPL.BUTTON_PERSONAL_ACCOUNT_IN_HEADER_LOCATOR)
+
+
+    @allure.step('Скролл к элементу и кликаем по нему через JS: {locator}')
+    def scroll_and_click(self, locator):
+        self.wait.until(EC.presence_of_element_located(locator))
+        self.wait.until(EC.element_to_be_clickable(locator))
+        element = self.driver.find_element(*locator)
+        self.driver.execute_script("arguments[0].scrollIntoView();", element)
+        self.driver.execute_script("arguments[0].click();", element)
+
+
+    @allure.step('Ожидание исчезновения элемента')
+    def wait_for_invisible_element(self, locator):
+        return self.wait.until(EC.invisibility_of_element_located(locator))
+
+
+    @allure.step('Перетащить элемент drag-and-drop')
     def drag_and_drop_element(self, locator_from, locator_to):
         source = self.wait_for_visible_element(locator_from)
         target = self.wait_for_visible_element(locator_to)
-        self.actions.drag_and_drop(source, target).perform()
+        drag_and_drop(self.driver, source, target)
 
 
+    @allure.step('Ожидание ')
+    def wait_for_constructor_page(self):
+        self.wait_for_presence_element(CPL.HEADER_ASSEMBLE_BURGER_CONSTRUCTOR_PAGE_LOCATOR)
 
 
-    # скроллинг до элемента и ожидание его кликабельности
-    @allure.step('Прокрутить до элемента')
-    def scroll_to_element(self, locator):
-        element = self.driver.find_element(*locator)
-        self.driver.execute_script("arguments[0].scrollIntoView();", element)
-        self.wait.until(EC.element_to_be_clickable(element))
-        return element
-
-    @allure.step("Получить список заказов")
-    def get_order_list(self):
-        return self.driver.find_elements(*ORDER_ITEMS_IN_FEED_HISTORY_IN_PERSONAL_ACCOUNT_PAGE_LOCATOR)
-
-    @allure.step("Прокрутить контейнер до элемента")
-    def scroll_inside_container_to_element(self, container_locator, item_locator):
-        container = self.driver.find_element(*container_locator)
-        items = container.find_elements(*item_locator)
-        if not items:
-            raise Exception("Элементы внутри контейнера не найдены")
-        last_item = items[-1]
-        self.driver.execute_script("arguments[0].scrollIntoView({block: 'end'});", last_item)
-        self.wait.until(EC.element_to_be_clickable(last_item))
-        return last_item
-
-    def get_elements(self, locator):
-        return self.driver.find_elements(*locator)
+    @allure.step('Ожидание ')
+    def wait_for_login_page(self):
+        self.wait_for_presence_element(LPL.HEADER_LOGIN_LOGIN_PAGE_LOCATOR)
 
 
+    @allure.step('Ожидание ')
+    def wait_for_feed_of_orders_page(self):
+        self.wait_for_presence_element(FOOL.HEADER_FEED_OF_ORDERS_PAGE_LOCATOR)
 
 
-    @allure.step("Получение списка номеров заказов в работе")
-    def get_all_orders_number_in_progress_list(self, locator):
-        self.wait_for_visible_element(locator)  # дождаться видимости хотя бы одного элемента
-        orders_elements = self.driver.find_elements(*locator)
-        list_of_orders = []
-        for item in orders_elements:
-            order_text = item.text.strip()
-            order_number = order_text.lstrip('0')
-            list_of_orders.append(order_number)
-        return list_of_orders
+    @allure.step("Обновить страницу и дождаться её полной загрузки")
+    def refresh_page_and_wait(self, locator):
+        self.driver.refresh()
+        self.wait.until(EC.presence_of_element_located(locator))
 
 
+    @allure.step("Получить значение счётчика по локатору")
+    def get_counter_by_locator(self, locator):
+        element = self.find_element(locator)
+        text = element.text.replace(" ", "").strip()
+        return int(text)
 
 
-
-
-    # # метод выполняет клик по элементу
-    # @allure.step('Ожидание видимости элемента')
-    # def wait_for_element(self, locator):
-    #     return self.wait.until(
-    #         EC.presence_of_element_located(locator))
-    #
-
-    # # метод получает текст элемента
-    # @allure.step('Получить текст')
-    # def get_text(self, locator):
-    #     element = self.wait_for_element(locator)
-    #     return element.text
-
-
-    # # метод передаёт тест элементу
-    # @allure.step('Изменить текст')
-    # def set_text(self, locator, text):
-    #     element = self.wait_for_element(locator)
-    #     element.send_keys(text)
-
-
-    # # метод получает текущий url
-    # @allure.step('Получить текущий url')
-    # def get_current_url(self):
-    #     return self.driver.current_url
-
-
-    # # метод проверяет, что страница загрузилась по "кликабельности" кнопки "Заказать" в хедере
-    # @allure.step('Дождаться кликабельности кнопки заказать в хедере')
-    # def wait_for_order_button(self):
-    #     self.wait.until(
-    #         EC.element_to_be_clickable(BasePageLocators.BUTTON_ORDER_IN_HEADER_LOCATOR)
-    #     )
-
-
-    # # при клике на логотип Яндекс, открывается новая вкладка и в ней открывается страница Дзен
-    # @allure.step('Проверить переход при клике на логотип Яндекс в хедере')
-    # @allure.description('При клике на логотип Яндекс, открывается новая вкладка и в ней открывается страница Дзен')
-    # def click_to_logo_yandex_and_change_to_dzen(self):
-    #     self.driver.switch_to.window(self.driver.window_handles[-1])
-    #     return self.wait.until(EC.url_contains(URL_DZEN))
-
-
-    # # принятие куки, клик по кнопке "Заказать" в хедере
-    # @allure.step('Переход в форме заказа при клике кнопки "Заказать" в хедере')
-    # @allure.description('Принять куки, клик по кнопке "Заказать" в хедере и подтверждение перехода к форме "Заказать"')
-    # def click_order_button_in_header_and_transition_to_order_page(self):
-    #     self.accept_cookie()
-    #     self.click_to_element(BasePageLocators.BUTTON_ORDER_IN_HEADER_LOCATOR)
-    #     self.wait_for_element(OrderPageLocators.FIELD_INPUT_NAME_LOCATOR)
-
-    def wait_of_element(self, locator):
-        return self.wait.until(EC.presence_of_element_located(locator))
-
-
-
-
-
-    @allure.step("Сделать скриншот страницы")
-    def make_screenshot(self, prefix="test"):
-        folder = "screenshots"
-        os.makedirs(folder, exist_ok=True)
-
-        # Получаем имя вызывающего теста
-        stack = inspect.stack()
-        test_func_name = ""
-        for frame in stack:
-            if frame.function.startswith("test_"):
-                test_func_name = frame.function
-                break
-
-        # Берём первые 3 слова из имени теста (по нижнему подчёркиванию)
-        parts = test_func_name.split("_")[:4]  # test + 3 слова
-        base_name = "_".join(parts) if parts else prefix
-
-        # Считаем количество существующих файлов с этим префиксом
-        existing = [f for f in os.listdir(folder) if f.startswith(base_name)]
-        filename = f"{base_name}_{len(existing) + 1}.png"
-
-        path = os.path.join(folder, filename)
-        self.driver.save_screenshot(path)

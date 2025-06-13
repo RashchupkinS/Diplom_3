@@ -1,9 +1,7 @@
 class Urls:
-    # url раздела "Главная страница" и раздела "Конструктор"
+    # url главная страница - раздел "Конструктор"
     URL_MAIN_PAGE = "https://stellarburgers.nomoreparties.site/"
-    # url раздела "Регистрация"
-    URL_REGISTRATION_PAGE = URL_MAIN_PAGE + "register"
-    # url раздела "Вход"
+    # url раздела "Авторизация"
     URL_LOGIN_PAGE = URL_MAIN_PAGE + "login"
     # url раздела "Восстановление пароля"
     URL_FORGOT_PASSWORD_PAGE = URL_MAIN_PAGE + "forgot-password"
@@ -17,5 +15,10 @@ class Urls:
     URL_ORDERS_HISTORY_PAGE = URL_MAIN_PAGE + "account/order-history"
     # url раздела "Лента заказов"
     URL_FEED_OF_ORDERS_PAGE = URL_MAIN_PAGE + "feed"
+
+    # адрес API для запроса - регистрация пользователя
+    CREATE_USER = URL_MAIN_PAGE + '/api/auth/register'
+    # адрес API для запроса - удаление пользователя
+    DELETE_USER = URL_MAIN_PAGE + '/api/auth/user'
 
 

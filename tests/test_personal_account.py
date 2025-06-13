@@ -1,70 +1,50 @@
 import allure
-from pages.base_page import BasePage
 from urls import Urls
-from locators.main_page_locators import PARAGRAPH_PERSONAL_ACCOUNT_HEADER_LOCATOR
-from locators.login_page_locators import (BUTTON_LOGIN_LOGIN_PAGE_LOCATOR,
-                                          INPUT_EMAIL_LOGIN_PAGE_LOCATOR,
-                                          INPUT_PASSWORD_LOGIN_PAGE_LOCATOR)
-from locators.personal_account_page_locators import (BUTTON_EXIT_PERSONAL_ACCOUNT_PAGE_LOCATOR,
-                                                     BUTTON_ORDERS_HISTORY_ACCOUNT_PAGE_LOCATOR)
-from data import email_for_test, password_for_test
 
-import time
+
 
 
 class TestPersonalAccount:
 
-# проверка: переход по клику на «Личный кабинет»
-    allure.title("Переход по клику на «Личный кабинет» в хедере на главной странице")
-    def test_transition_to_login_page_by_button_personal_account_from_main_page(self, driver):
-        page = BasePage(driver)
-        page.open_page(Urls.URL_MAIN_PAGE)
-        page.click_to_element(PARAGRAPH_PERSONAL_ACCOUNT_HEADER_LOCATOR)
-        page.wait_for_clickable_element(BUTTON_LOGIN_LOGIN_PAGE_LOCATOR)
-        actual_url = page.get_current_url()
-        assert actual_url == Urls.URL_LOGIN_PAGE, "Нет перехода на страницу «Войти в аккаунт»"
+    # проверка: переход по клику на «Личный кабинет»
+    allure.title("Переход по клику на кнопку «Личный кабинет» в хедере на главной странице")
+    def test_transition_to_login_page_by_button_personal_account_from_constructor_page(self, constructor_page, login_page):
+        constructor_page.open_constructor_page()
+        constructor_page.click_button_personal_account_in_header()
+        login_page.wait_for_login_page()
+        current_url = login_page.get_current_url()
+        assert current_url == Urls.URL_LOGIN_PAGE, (f"Ожидалась страница '{Urls.URL_LOGIN_PAGE}', "
+                                                    f"получена страница '{current_url}'")
 
 
-# проверка: переход в раздел «История заказов»
-    allure.title("Переход в раздел «История заказов» по клику кнопки 'История заказов' в личном кабинете")
-    def test_transition_from_personal_account_to_orders_history(self, driver):
-        page = BasePage(driver)
-        page.open_page(Urls.URL_LOGIN_PAGE)
-        page.wait_for_clickable_element(BUTTON_LOGIN_LOGIN_PAGE_LOCATOR)
-        page.click_to_element(INPUT_EMAIL_LOGIN_PAGE_LOCATOR)
-        page.set_text(locator=INPUT_EMAIL_LOGIN_PAGE_LOCATOR, text=email_for_test)
-        page.click_to_element(INPUT_PASSWORD_LOGIN_PAGE_LOCATOR)
-        page.set_text(locator=INPUT_PASSWORD_LOGIN_PAGE_LOCATOR, text=password_for_test)
-        page.click_to_element(BUTTON_LOGIN_LOGIN_PAGE_LOCATOR)
-        time.sleep(3)
-        page.click_to_element(PARAGRAPH_PERSONAL_ACCOUNT_HEADER_LOCATOR)
-        time.sleep(3)
-        page.wait_for_visible_element(BUTTON_ORDERS_HISTORY_ACCOUNT_PAGE_LOCATOR)
-        page.wait_for_clickable_element(BUTTON_ORDERS_HISTORY_ACCOUNT_PAGE_LOCATOR)
-        page.click_to_element(BUTTON_ORDERS_HISTORY_ACCOUNT_PAGE_LOCATOR)
-        time.sleep(3)
-        actual_url = page.get_current_url()
-        assert actual_url == Urls.URL_ORDERS_HISTORY_PAGE, ("Не произведён выход со страницы "
-                                                            "'Личный кабинет' на страницу 'История заказов'")
+    # проверка: переход в раздел «История заказов»
+    allure.title("Переход на страницу «История заказов» по клику кнопки 'История заказов' в личном кабинете")
+    def test_transition_to_orders_history_from_personal_account(self, login_page,
+                                                                personal_account_page, registered_user_data):
+        email, password = registered_user_data
+        login_page.open_login_page()
+        login_page.fill_authorize_form_and_click_enter(email, password)
+        personal_account_page.wait_for_constructor_page()
+        personal_account_page.click_button_personal_account_in_header()
+        personal_account_page.wait_for_button_orders_history()
+        personal_account_page.click_orders_history_button()
+        current_url = personal_account_page.get_current_url()
+        assert current_url == Urls.URL_ORDERS_HISTORY_PAGE, (f"Ожидалась страница '{Urls.URL_ORDERS_HISTORY_PAGE}', "
+                                                             f"получена страница '{current_url}'")
 
 
-# проверка: выход по кнопке «Выйти» в личном кабинете
+    # проверка: выход по кнопке «Выйти» в личном кабинете
     allure.title("Выход по кнопке «Выйти» в личном кабинете и переход на страницу авторизации")
-    def test_logout_from_account(self, driver):
-        page = BasePage(driver)
-        page.open_page(Urls.URL_MAIN_PAGE)
-        page.click_to_element(PARAGRAPH_PERSONAL_ACCOUNT_HEADER_LOCATOR)
-        page.wait_for_clickable_element(BUTTON_LOGIN_LOGIN_PAGE_LOCATOR)
-        page.click_to_element(INPUT_EMAIL_LOGIN_PAGE_LOCATOR)
-        page.set_text(locator=INPUT_EMAIL_LOGIN_PAGE_LOCATOR, text=email_for_test)
-        page.click_to_element(INPUT_PASSWORD_LOGIN_PAGE_LOCATOR)
-        page.set_text(locator=INPUT_PASSWORD_LOGIN_PAGE_LOCATOR, text=password_for_test)
-        page.click_to_element(BUTTON_LOGIN_LOGIN_PAGE_LOCATOR)
-        page.click_to_element(PARAGRAPH_PERSONAL_ACCOUNT_HEADER_LOCATOR)
-        page.wait_for_clickable_element(BUTTON_EXIT_PERSONAL_ACCOUNT_PAGE_LOCATOR)
-        page.click_to_element(BUTTON_EXIT_PERSONAL_ACCOUNT_PAGE_LOCATOR)
-        page.wait_for_clickable_element(BUTTON_LOGIN_LOGIN_PAGE_LOCATOR)
-        actual_url = page.get_current_url()
-        assert actual_url == Urls.URL_LOGIN_PAGE, "Не произведён выход со страницы 'Личный кабинет'"
+    def test_logout_from_personal_account(self, login_page, personal_account_page, registered_user_data):
+        email, password = registered_user_data
+        login_page.open_login_page()
+        login_page.fill_authorize_form_and_click_enter(email, password)
+        personal_account_page.wait_for_constructor_page()
+        personal_account_page.click_button_personal_account_in_header()
+        personal_account_page.click_exit_button()
+        personal_account_page.wait_for_login_page()
+        current_url = personal_account_page.get_current_url()
+        assert current_url == Urls.URL_LOGIN_PAGE, (f"Ожидалась страница '{Urls.URL_LOGIN_PAGE}', "
+                                                    f"получена страница '{current_url}'")
 
 
