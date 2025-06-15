@@ -13,9 +13,11 @@ class ConstructorPage(BasePage):
         self.open_page(Urls.URL_MAIN_PAGE)
 
 
-    @allure.step('Кликнуть булку "Флюоресцентная булка R2-D3" на странице "Конструктор"')
+    @allure.step('Кликнуть булку "Флюоресцентная булка R2-D3" на странице "Конструктор" '
+                 'и дождаться загрузки окна с деталями ингредиента')
     def click_on_r2_d3_bun(self):
         self.click_to_element_by_script(CPL.INGREDIENT_R2_D3_BUN_CONSTRUCTOR_PAGE_LOCATOR)
+        self.wait_for_visible_element(CPL.HEADER_INGREDIENT_DETAILS_MODAL_WINDOW_CONSTRUCTOR_PAGE_LOCATOR)
 
 
     @allure.step('Перетащить булку "Флюоресцентная булка R2-D3" в корзину бургера')
@@ -24,24 +26,17 @@ class ConstructorPage(BasePage):
                                    CPL.BURGER_BASKET_CONSTRUCTOR_PAGE_LOCATOR)
 
 
-    @allure.step('Кликнуть кнопку "Оформить заказ" на странице "Конструктор"')
+    @allure.step('Кликнуть кнопку "Оформить заказ" на странице "Конструктор" и '
+                 'дождаться видимости заголовка "идентификатор заказа" в открывшемся окне')
     def click_on_create_order_button(self):
         self.click_to_element_by_script(CPL.BUTTON_PLACE_ORDER_CONSTRUCTOR_PAGE_LOCATOR)
+        self.wait_for_real_order_number()
 
 
     @allure.step('Кликнуть иконку "Крестик"')
     def click_on_cross_in_ingredients_window(self):
         self.click_to_element_by_script(CPL.ICON_CROSS_MODAL_WINDOW_CONSTRUCTOR_PAGE_LOCATOR)
-
-
-    @allure.step('Ожидание видимости заголовка "Детали ингредиента"')
-    def wait_for_visible_window_with_ingredients(self):
-        return self.wait_for_visible_element(CPL.HEADER_INGREDIENT_DETAILS_MODAL_WINDOW_CONSTRUCTOR_PAGE_LOCATOR)
-
-
-    @allure.step('Ожидание видимости заголовка "идентификатор заказа"')
-    def wait_for_visible_window_with_order(self):
-        return self.wait_for_visible_element(CPL.HEADER_ORDER_ID_MODAL_WINDOW_CONSTRUCTOR_PAGE_LOCATOR)
+        self.wait_for_constructor_page()
 
 
     @allure.step('Получить значение счётчика ингредиента')

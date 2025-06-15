@@ -12,6 +12,7 @@ class CheckData:
     HEADER_ORDER_DETAIL_TITLE = "Cостав"
 
 
+# параметры теста test_counter_increases_after_created_new_order
 counter_parameters = [
     (FOOL.TOTAL_ORDERS_FOR_ALL_TIME_COUNTER_FEED_OF_ORDERS_PAGE_LOCATOR, "Выполнено за всё время"),
     (FOOL.TOTAL_ORDERS_FOR_TODAY_COUNTER_FEED_OF_ORDERS_PAGE_LOCATOR, "Выполнено за сегодня"),

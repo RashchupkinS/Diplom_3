@@ -40,5 +40,6 @@ class LoginPage(BasePage):
         self.fill_email_field(email)
         self.fill_password_field(password)
         self.click_login_button()
+        self.wait_for_constructor_page()
 
 

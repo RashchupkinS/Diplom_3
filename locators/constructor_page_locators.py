@@ -41,7 +41,7 @@ class ConstructorPageLocators:
     # заголовок "идентификатор заказа" в модальном окне
     HEADER_ORDER_ID_MODAL_WINDOW_CONSTRUCTOR_PAGE_LOCATOR = By.XPATH, "//p[contains(text(), 'идентификатор заказа')]"
     # номер заказа в модальном окне
-    HEADER_NUMBER_OF_ORDER_MODAL_WINDOW_CONSTRUCTOR_PAGE_LOCATOR = (By.CSS_SELECTOR,
-                    "h2.Modal_modal__title_shadow__3ikwq.Modal_modal__title__2L34m.text.text_type_digits-large.mb-8")
+    HEADER_NUMBER_OF_ORDER_MODAL_WINDOW_CONSTRUCTOR_PAGE_LOCATOR = (By.XPATH,
+                                                            "//h2[contains(@class, 'text_type_digits-large mb-8')]")
 
 

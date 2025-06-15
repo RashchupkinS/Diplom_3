@@ -25,13 +25,10 @@ class ForgotPasswordPage(BasePage):
         self.set_text_in_element(locator=FPPL.INPUT_PASSWORD_RESET_PASSWORD_PAGE_LOCATOR, text=password)
 
 
-    @allure.step('Нажать кнопку "Восстановить" на странице "Восстановить пароль"')
+    @allure.step('Нажать кнопку "Восстановить" на странице "Восстановить пароль" и '
+                 'дождаться появления страницы "Восстановление пароля"')
     def click_recovery_button(self):
         self.click_to_element_by_script(FPPL.BUTTON_RECOVER_FORGOT_PASSWORD_PAGE_LOCATOR)
-
-
-    @allure.step("Ожидание поля 'Пароль' на странице сброса пароля")
-    def wait_for_password_field(self):
         self.wait_for_clickable_element(FPPL.INPUT_PASSWORD_RESET_PASSWORD_PAGE_LOCATOR)
 
 

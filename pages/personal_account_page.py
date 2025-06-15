@@ -7,7 +7,7 @@ from locators.personal_account_page_locators import PersonalAccountPageLocators 
 
 class PersonalAccountPage(BasePage):
 
-    @allure.step('Нажать кнопку "История заказов" на странице "Личный кабинет"')
+    @allure.step('Нажать кнопку "История заказов" на странице "Личный кабинет" и дождаться загрузки истории заказов')
     def click_orders_history_button(self):
         self.click_to_element_by_script(PAPL.BUTTON_ORDERS_HISTORY_ACCOUNT_PAGE_LOCATOR)
 
@@ -15,16 +15,12 @@ class PersonalAccountPage(BasePage):
     @allure.step('Нажать кнопку "Выход" на странице "Личный кабинет"')
     def click_exit_button(self):
         self.click_to_element_by_script(PAPL.BUTTON_EXIT_PERSONAL_ACCOUNT_PAGE_LOCATOR)
+        self.wait_for_login_page()
 
 
     @allure.step('Получить список заказов в "История заказов" на странице "Личный кабинет"')
     def get_order_list(self):
         return self.driver.find_elements(*PAPL.ORDER_ITEMS_IN_FEED_HISTORY_IN_PERSONAL_ACCOUNT_PAGE_LOCATOR)
-
-
-    @allure.step('Ожидание кнопки "История заказов" в личном кабинете')
-    def wait_for_button_orders_history(self):
-        self.wait_for_clickable_element(PAPL.BUTTON_ORDERS_HISTORY_ACCOUNT_PAGE_LOCATOR)
 
 
     @allure.step('Ожидание список заказов в "Истории заказов" в личном кабинете')
