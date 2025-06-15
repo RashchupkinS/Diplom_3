@@ -14,7 +14,7 @@ class TestFeedOfOrders:
         feed_of_orders_page.click_on_order()
         order_details_title = feed_of_orders_page.get_title_order_details()
         with allure.step('Проверить открытие окна и соответствие заголовка ожидаемому'):
-            assert feed_of_orders_page.is_displayed_opened_modal_window, "Окно не закрылось"
+            assert feed_of_orders_page.is_displayed_opened_modal_window(), "Окно не закрылось"
             assert order_details_title == CheckData.HEADER_ORDER_DETAIL_TITLE,  \
                                                                 (f"Ожидался заголовок '{CheckData.HEADER_ORDER_DETAIL_TITLE}', "
                                                                 f"получен заголовок '{order_details_title}'")
@@ -57,7 +57,7 @@ class TestFeedOfOrders:
         feed_of_orders_page.refresh_feed_of_orders_page_and_wait()
         counter_after = feed_of_orders_page.get_counter_by_locator(counter_locator)
         with allure.step('Сравнить значения счётчиков ДО и ПОСЛЕ оформления заказа, счётчик ПОСЛЕ должен увеличиться'):
-            assert counter_before < counter_after, "Счётчик {counter_name} не увеличился после создания нового заказа"
+            assert counter_before < counter_after, f"Счётчик {counter_name} не увеличился после создания нового заказа"
 
 
     # проверка: после оформления заказа его номер появляется в разделе В работе

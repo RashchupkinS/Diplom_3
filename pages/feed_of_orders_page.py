@@ -53,6 +53,7 @@ class FeedOfOrdersPage(BasePage):
         return orders_number
 
 
+    @allure.step("Обновить страницу ленты заказов и дождаться загрузки")
     def refresh_feed_of_orders_page_and_wait(self):
         self.refresh_page_and_wait(FOOL.HEADER_FEED_OF_ORDERS_PAGE_LOCATOR)
 
