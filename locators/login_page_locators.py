@@ -5,9 +5,9 @@ from selenium.webdriver.common.by import By
 
 class LoginPageLocators:
     # поле "Email"
-    INPUT_EMAIL_LOGIN_PAGE_LOCATOR = By.XPATH, "//fieldset[1]//input"
+    INPUT_EMAIL_LOGIN_PAGE_LOCATOR = By.XPATH, "//input[@type='text' and contains(@class, 'input__textfield')]"
     # поле "Пароль"
-    INPUT_PASSWORD_LOGIN_PAGE_LOCATOR = By.XPATH, "//fieldset[2]//input"
+    INPUT_PASSWORD_LOGIN_PAGE_LOCATOR = By.XPATH, "//input[@type='password' and contains(@class, 'input__textfield')]"
     # кнопка "Войти"
     BUTTON_LOGIN_LOGIN_PAGE_LOCATOR = By.XPATH, ".//button[text()='Войти']"
     # кнопка "Восстановить пароль"

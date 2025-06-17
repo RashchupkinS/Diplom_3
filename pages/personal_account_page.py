@@ -1,8 +1,12 @@
 import allure
 from pages.base_page import BasePage
 from locators.personal_account_page_locators import PersonalAccountPageLocators as PAPL
+import logging
 
 
+
+
+logger = logging.getLogger(__name__)
 
 
 class PersonalAccountPage(BasePage):
@@ -20,7 +24,7 @@ class PersonalAccountPage(BasePage):
 
     @allure.step('Получить список заказов в "История заказов" на странице "Личный кабинет"')
     def get_order_list(self):
-        return self.driver.find_elements(*PAPL.ORDER_ITEMS_IN_FEED_HISTORY_IN_PERSONAL_ACCOUNT_PAGE_LOCATOR)
+        return self.find_elements(PAPL.ORDER_ITEMS_IN_FEED_HISTORY_IN_PERSONAL_ACCOUNT_PAGE_LOCATOR)
 
 
     @allure.step('Ожидание список заказов в "Истории заказов" в личном кабинете')
@@ -37,7 +41,7 @@ class PersonalAccountPage(BasePage):
             order_number = order_text.split('\n')[0]
             return order_number
         else:
-            print("Список заказов пуст")
+            logger.warning("Список заказов пуст")
             return None
 
 

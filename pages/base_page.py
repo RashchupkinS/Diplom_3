@@ -143,3 +143,16 @@ class BasePage:
         self.wait_for_presence_element(LPL.HEADER_LOGIN_LOGIN_PAGE_LOCATOR)
 
 
+    @allure.step("Получить значение счётчика")
+    def get_counter_by_locator(self, locator):
+        element = self.find_element(locator)
+        text = element.text.replace(" ", "").strip()
+        return int(text)
+
+
+    @allure.step("Прокрутить к элементу и кликнуть по нему (обычный click)")
+    def scroll_to_element_and_click(self, element):
+        self.driver.execute_script("arguments[0].scrollIntoView();", element)
+        element.click()
+
+

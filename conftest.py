@@ -1,10 +1,5 @@
 import pytest
 from selenium import webdriver
-from pages.constructor_page import ConstructorPage
-from pages.forgot_password_page import ForgotPasswordPage
-from pages.login_page import LoginPage
-from pages.personal_account_page import PersonalAccountPage
-from pages.feed_of_orders_page import FeedOfOrdersPage
 from urls import Urls
 from helper import Generator
 import requests
@@ -24,36 +19,6 @@ def driver(request):
         driver = webdriver.Firefox(options=firefox_options)
     yield driver
     driver.quit()
-
-
-# фикстура создаёт объект класса ConstructorPage
-@pytest.fixture(scope='function')
-def constructor_page(driver):
-    return ConstructorPage(driver)
-
-
-# фикстура создаёт объект класса LoginPage
-@pytest.fixture(scope='function')
-def login_page(driver):
-    return LoginPage(driver)
-
-
-# фикстура создаёт объект класса ForgotPasswordPage
-@pytest.fixture(scope='function')
-def forgot_password_page(driver):
-    return ForgotPasswordPage(driver)
-
-
-# фикстура создаёт объект класса PersonalAccountPage
-@pytest.fixture(scope='function')
-def personal_account_page(driver):
-    return PersonalAccountPage(driver)
-
-
-# фикстура создаёт объект класса FeedOfOrdersPage
-@pytest.fixture(scope='function')
-def feed_of_orders_page(driver):
-    return FeedOfOrdersPage(driver)
 
 
 # фикстура создаёт и регистрирует нового пользователя через API и удаляет его после теста

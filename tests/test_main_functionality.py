@@ -1,5 +1,7 @@
 import allure
 from data import CheckData
+from pages.constructor_page import ConstructorPage
+from pages.login_page import LoginPage
 from urls import Urls
 
 
@@ -9,7 +11,8 @@ class TestMainFunctionality:
 
     # проверка: переход по клику на «Конструктор»
     @allure.title('Переход на страницу "Конструктор" по клику на кнопку «Конструктор» в хедере')
-    def test_transition_from_login_page_to_constructor(self, login_page):
+    def test_transition_from_login_page_to_constructor(self, driver):
+        login_page = LoginPage(driver)
         login_page.open_login_page()
         login_page.click_button_constructor_in_header()
         current_url = login_page.get_current_url()
@@ -20,7 +23,8 @@ class TestMainFunctionality:
 
     # проверка: переход по клику на «Лента заказов»
     @allure.title('Переход на страницу «Лента заказов» по клику кнопки "Лента заказов" в хедере')
-    def test_transition_from_constructor_to_feed_of_orders(self, constructor_page):
+    def test_transition_from_constructor_to_feed_of_orders(self, driver):
+        constructor_page = ConstructorPage(driver)
         constructor_page.open_constructor_page()
         constructor_page.click_button_feed_of_orders_in_header()
         current_url = constructor_page.get_current_url()
@@ -31,7 +35,8 @@ class TestMainFunctionality:
 
     # проверка: если кликнуть на ингредиент, появится всплывающее окно с деталями
     @allure.title('Если кликнуть на ингредиент, появится всплывающее окно с деталями')
-    def test_open_window_with_ingredient_details(self, constructor_page):
+    def test_open_window_with_ingredient_details(self, driver):
+        constructor_page = ConstructorPage(driver)
         constructor_page.open_constructor_page()
         constructor_page.click_on_r2_d3_bun()
         ingredient_title = constructor_page.get_title_ingredient_details()
@@ -44,7 +49,8 @@ class TestMainFunctionality:
 
     # проверка: всплывающее окно закрывается кликом по крестику
     @allure.title('Всплывающее окно закрывается кликом по крестику')
-    def test_close_window_with_ingredient_details_by_clicking_on_cross(self, constructor_page):
+    def test_close_window_with_ingredient_details_by_clicking_on_cross(self, driver):
+        constructor_page = ConstructorPage(driver)
         constructor_page.open_constructor_page()
         constructor_page.click_on_r2_d3_bun()
         constructor_page.click_on_cross_in_ingredients_window()
@@ -58,8 +64,9 @@ class TestMainFunctionality:
 
 
     # проверка: при добавлении ингредиента в заказ, увеличивается каунтер данного ингредиента
-    @allure.title('При добавлении ингредиента в корзину, увеличивается каунтер данного ингредиента')
-    def test_ingredient_counter_increases_when_ingredient_is_added_to_basket(self, constructor_page):
+    @allure.title('При добавлении ингредиента в корзину, увеличивается счётчик данного ингредиента')
+    def test_ingredient_counter_increases_when_ingredient_is_added_to_basket(self, driver):
+        constructor_page = ConstructorPage(driver)
         constructor_page.open_constructor_page()
         counter_ingredient_before_add = constructor_page.get_ingredient_r2_d3_counter_value()
         constructor_page.drag_and_drop_r2_d3_bun_to_burger()
@@ -74,11 +81,13 @@ class TestMainFunctionality:
 
     # проверка: залогиненный пользователь может оформить заказ
     @allure.title('Авторизованный пользователь может оформить заказ')
-    def test_logged_user_can_place_an_order(self, login_page, constructor_page, registered_user_data):
+    def test_logged_user_can_place_an_order(self, driver, registered_user_data):
         email, password = registered_user_data
+        login_page = LoginPage(driver)
         login_page.open_login_page()
         login_page.fill_authorize_form_and_click_enter(email, password)
         login_page.click_button_constructor_in_header()
+        constructor_page = ConstructorPage(driver)
         constructor_page.drag_and_drop_r2_d3_bun_to_burger()
         constructor_page.click_on_create_order_button()
         order_window_title = constructor_page.get_title_id_order()

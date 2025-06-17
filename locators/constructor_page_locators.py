@@ -6,11 +6,11 @@ from selenium.webdriver.common.by import By
 class ConstructorPageLocators:
 # Кнопки в хедере
     # ссылка "Личный кабинет" в хедере
-    BUTTON_PERSONAL_ACCOUNT_IN_HEADER_LOCATOR = By.XPATH, '//*[@id="root"]/div/header//p[contains(text(), "Личный Кабинет")]'
+    BUTTON_PERSONAL_ACCOUNT_IN_HEADER_LOCATOR = By.XPATH, '//p[contains(text(), "Личный Кабинет")]'
     # ссылка "Лента заказов" в хедере
-    BUTTON_FEED_OF_ORDERS_IN_HEADER_LOCATOR = By.XPATH, '//*[@id="root"]/div/header//p[contains(text(), "Лента Заказов")]'
+    BUTTON_FEED_OF_ORDERS_IN_HEADER_LOCATOR = By.XPATH, '//p[contains(text(), "Лента Заказов")]'
     # ссылка "Конструктор" в хедере
-    BUTTON_CONSTRUCTOR_IN_HEADER_LOCATOR = By.XPATH, '//*[@id="root"]/div/header//p[contains(text(), "Конструктор")]'
+    BUTTON_CONSTRUCTOR_IN_HEADER_LOCATOR = By.XPATH, '//p[contains(text(), "Конструктор")]'
 
 # Заголовки, кнопки, элементы страницы "Конструктор"
     # заголовок "Соберите бургер"

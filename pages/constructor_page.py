@@ -50,19 +50,21 @@ class ConstructorPage(BasePage):
         text = element.text.replace(" ", "").strip()
         return text
 
-
+    @allure.step('Получить заголовок ингредиента "Флюоресцентная булка R2-D3" в корзине')
     def get_title_ingredient_r2_d3_in_basket(self):
         return self.get_element_title(CPL.INGREDIENT_R2_D3_BUN_IN_BASKET_CONSTRUCTOR_PAGE_LOCATOR)
 
-
+    @allure.step('Получить заголовок: "идентификатор заказа"')
     def get_title_id_order(self):
         return self.get_element_title(CPL.HEADER_ORDER_ID_MODAL_WINDOW_CONSTRUCTOR_PAGE_LOCATOR)
 
 
+    @allure.step('Получить заголовок: "Детали ингредиента"')
     def get_title_ingredient_details(self):
         return self.get_element_title(CPL.HEADER_INGREDIENT_DETAILS_MODAL_WINDOW_CONSTRUCTOR_PAGE_LOCATOR)
 
 
+    @allure.step('Получить заголовок: "Соберите бургер"')
     def get_title_header_assemble_burger(self):
         return self.get_element_title(CPL.HEADER_ASSEMBLE_BURGER_CONSTRUCTOR_PAGE_LOCATOR)
 
@@ -87,6 +89,5 @@ class ConstructorPage(BasePage):
             ),
             message="Номер заказа не обновился с 9999 на реальный"
         )
-
 
 
