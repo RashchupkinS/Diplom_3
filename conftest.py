@@ -1,3 +1,5 @@
+import copy
+
 import pytest
 from selenium import webdriver
 from urls import Urls
@@ -29,13 +31,18 @@ def registered_user_data():
     password = payload["password"]
     with allure.step("Создание пользователя через API"):
         response = requests.post(url=Urls.CREATE_USER, json=payload)
-        if response.status_code == 200:
-            access_token = response.json().get("access_token")
-            yield email, password
-            with allure.step("Удаление пользователя через API"):
-                header = {'Authorization': access_token}
-                requests.delete(Urls.DELETE_USER, headers=header)
-        else:
+        if response.status_code != 200:
             pytest.skip(f"Не удалось создать пользователя. Код ответа: {response.status_code}")
+        access_token = response.json().get("access_token")
+    yield email, password
+    with allure.step("Удаление пользователя через API"):
+        login_payload = copy.deepcopy(payload)
+        del login_payload["name"]
+        with allure.step('Проверка перед удалением, что пользователь существует'):
+            response_login = requests.post(url=Urls.LOGIN_USER, json=login_payload)
+            if response_login.status_code == 200:
+                header = {'Authorization': access_token}
+                with allure.step('Запрос удаление пользователя'):
+                    requests.delete(Urls.DELETE_USER, headers=header)
 
 

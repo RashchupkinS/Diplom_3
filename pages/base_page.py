@@ -156,3 +156,14 @@ class BasePage:
         element.click()
 
 
+    @allure.step("Ожидать, пока номер заказа обновится с 9999 на актуальный")
+    def wait_for_real_order_number(self, locator):
+        self.wait.until(
+            lambda driver: (
+                    (text := self.find_element(locator).text.replace(" ", "").strip()).isdigit()
+                    and text != "9999"
+            ),
+            message="Номер заказа не обновился с 9999 на реальный"
+        )
+
+

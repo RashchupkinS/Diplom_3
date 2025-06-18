@@ -30,7 +30,7 @@ class ConstructorPage(BasePage):
                  'дождаться видимости заголовка "идентификатор заказа" в открывшемся окне')
     def click_on_create_order_button(self):
         self.click_to_element_by_script(CPL.BUTTON_PLACE_ORDER_CONSTRUCTOR_PAGE_LOCATOR)
-        self.wait_for_real_order_number()
+        self.wait_for_real_order_number(CPL.HEADER_NUMBER_OF_ORDER_MODAL_WINDOW_CONSTRUCTOR_PAGE_LOCATOR)
 
 
     @allure.step('Кликнуть иконку "Крестик"')
@@ -50,9 +50,11 @@ class ConstructorPage(BasePage):
         text = element.text.replace(" ", "").strip()
         return text
 
+
     @allure.step('Получить заголовок ингредиента "Флюоресцентная булка R2-D3" в корзине')
     def get_title_ingredient_r2_d3_in_basket(self):
         return self.get_element_title(CPL.INGREDIENT_R2_D3_BUN_IN_BASKET_CONSTRUCTOR_PAGE_LOCATOR)
+
 
     @allure.step('Получить заголовок: "идентификатор заказа"')
     def get_title_id_order(self):
@@ -69,25 +71,13 @@ class ConstructorPage(BasePage):
         return self.get_element_title(CPL.HEADER_ASSEMBLE_BURGER_CONSTRUCTOR_PAGE_LOCATOR)
 
 
-    @allure.step('Окно открыто')
+    @allure.step('Проверка отображения модального окна')
     def is_displayed_opened_modal_window(self):
         return self.find_element(CPL.MODAL_WINDOW_OPENED_CONSTRUCTOR_PAGE_LOCATOR).is_displayed()
 
 
-    @allure.step('Окно открыто')
+    @allure.step('Проверка отображения модального окна')
     def is_displayed_closed_modal_window(self):
         return self.find_element(CPL.MODAL_WINDOW_CLOSED_CONSTRUCTOR_PAGE_LOCATOR).is_displayed()
-
-
-    @allure.step("Ожидать, пока номер заказа обновится с 9999 на актуальный")
-    def wait_for_real_order_number(self):
-        self.wait.until(
-            lambda driver: (
-                    (text := self.find_element(
-                        CPL.HEADER_NUMBER_OF_ORDER_MODAL_WINDOW_CONSTRUCTOR_PAGE_LOCATOR
-                    ).text.replace(" ", "").strip()).isdigit() and text != "9999"
-            ),
-            message="Номер заказа не обновился с 9999 на реальный"
-        )
 
 

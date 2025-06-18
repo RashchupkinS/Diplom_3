@@ -12,6 +12,8 @@ class FeedOfOrdersPage(BasePage):
     def open_feed_of_orders_page(self):
         self.open_page(Urls.URL_FEED_OF_ORDERS_PAGE)
 
+
+    @allure.step('Кликнуть первый заказ в "Ленте заказов"')
     def click_on_order(self):
         element = self.wait_for_visible_element(FOOL.ORDER_ITEMS_IN_LIST_FEED_OF_ORDERS_PAGE_LOCATOR)
         self.scroll_to_element_and_click(element)

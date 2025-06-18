@@ -20,5 +20,7 @@ class Urls:
     CREATE_USER = URL_MAIN_PAGE + '/api/auth/register'
     # адрес API для запроса - удаление пользователя
     DELETE_USER = URL_MAIN_PAGE + '/api/auth/user'
+    # адрес API для запроса - авторизация пользователя
+    LOGIN_USER = URL_MAIN_PAGE + '/api/auth/login'
 
 
